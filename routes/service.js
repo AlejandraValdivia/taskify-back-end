@@ -3,7 +3,7 @@ const router = express.Router();
 const Service = require('../models/Service');
 const auth = require('../middleware/auth');
 
-// create a new service
+// Create a new service
 router.post('/', auth, async (req, res) => {
     const { name, description } = req.body;
     try {
@@ -56,7 +56,7 @@ router.put('/:id', auth, async (req, res) => {
     }
 });
 
-// Delete services
+// Delete a service
 router.delete('/:id', auth, async (req, res) => {
     try {
         const service = await Service.findById(req.params.id);
@@ -70,3 +70,4 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
+

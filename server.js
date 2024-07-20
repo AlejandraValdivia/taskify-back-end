@@ -20,11 +20,14 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 const authRoutes = require('./routes/auth');
 const taskRoutes = require('./routes/task');
 const serviceRoutes = require('./routes/service');
+const categoryRoutes = require('./routes/category');
+
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/services', serviceRoutes);
+app.use('/api/categories', categoryRoutes);
 
-// Route
+// Sample Route
 app.get('/', (req, res) => {
     res.send('Server is running');
 });
@@ -32,3 +35,4 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
