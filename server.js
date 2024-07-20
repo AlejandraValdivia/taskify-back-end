@@ -29,7 +29,7 @@ app.use('/api/categories', categoryRoutes);
 
 // Sample Route
 app.get('/', (req, res) => {
-    res.send('Server is running');
+    res.send('Taskify APP');
 });
 
 app.listen(PORT, () => {
