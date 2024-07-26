@@ -9,7 +9,7 @@ Taskify is a comprehensive task management application designed to help users or
 
 ## Getting Started
 
-- **Deployed App**: [Render]()
+- **Deployed App**: [https://taskify-front-end-hu20.onrender.com/]()
 
 ## Installation Instructions
 

@@ -1,18 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
-const jwt = require("jsonwebtoken");
-const verifyToken = require("../middleware/verify-token");
+const { User } = require("../models/User");
 
 const SALT_LENGTH = 12;
 
 router.post("/signup", async (req, res) => {
   try {
-    console.log("----- checking API signup -----", req.body);
-    const userInDatabase = await User.findOne({ username: req.body.username });
+    const userInDatabase = await User.findOne({'_id':new BSON.ObjectID(id)});
     if (userInDatabase) {
-      return res.status(400).json({ error: "Username already taken." });
+      return res.json({ error: "Username already taken." });
     }
     const user = await User.create({
       username: req.body.username,
@@ -32,8 +29,7 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
-  console.log("----- checking API login -----", req.body);
+router.post("/signin", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (user && bcrypt.compareSync(req.body.password, user.hashedPassword)) {
@@ -50,35 +46,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/", verifyToken, async (req, res) => {
-  console.log("----- checking API create -----", req.body);
-  try {
-    const { username, password, firstName, lastName, address, email } =
-      req.body;
-    const hashedPassword = bcrypt.hashSync(password, SALT_LENGTH);
-    const user = new User({
-      username,
-      hashedPassword,
-      firstName,
-      lastName,
-      address,
-      email,
-    });
-    await user.save();
-    res.status(201).json({ message: "User created successfully", user });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-router.get("/", async (req, res) => {
-  console.log("----- checking API get users -----", req.body);
-  try {
-    const users = await User.find();
-    res.status(200).json({ users });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+router.get("/signout", (req, res) => {
+  req.session.destroy();
+  res.redirect("/");
 });
 
 module.exports = router;

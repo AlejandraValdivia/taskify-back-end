@@ -1,26 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const verifyToken = require("../middleware/verify-token");
 
-router.get("/sign-token", (req, res) => {
-  const user = {
-    id: 1,
-    username: "test",
-    hashedPassword: "test",
-  };
-  const token = jwt.sign({ user }, process.env.JWT_SECRET);
-  res.json({ token });
-});
-
-
-
-router.post("/verify-token", (req, res) => {
+router.get("/:userId", verifyToken, async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    res.json({ decoded });
+    if (req.user._id !== req.params.userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      res.status(404);
+      throw new Error("Profile not found.");
+    }
+    res.json({ user });
   } catch (error) {
-    res.status(401).json({ error: "Invalid token." });
+    if (res.statusCode === 404) {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   }
 });
 
