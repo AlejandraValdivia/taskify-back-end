@@ -24,6 +24,7 @@ app.use("/test-jwt", testJWTRouter);
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 connectToDatabase();
 
 // app.use('/auth', authRoutes);

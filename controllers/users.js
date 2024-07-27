@@ -1,24 +1,36 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { User } = require("../models/User");
+const jwt = require("jsonwebtoken");
+const  User  = require("../models/User");
 
 const SALT_LENGTH = 12;
 
 router.post("/signup", async (req, res) => {
   try {
-    const userInDatabase = await User.findOne({'_id':new BSON.ObjectID(id)});
-    if (userInDatabase) {
-      return res.json({ error: "Username already taken." });
-    }
-    const user = await User.create({
-      username: req.body.username,
-      email: req.body.email,
-      hashedPassword: bcrypt.hashSync(req.body.password, SALT_LENGTH),
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      address: req.body.address,
+    console.log("line 10 in signup post function");
+    const { username, email, password, firstName, lastName, address } =
+      req.body;
+    const userInDatabase = await User.findOne({
+      $or: [{ username }, { email }],
     });
+    if (userInDatabase) {
+      return res
+        .status(400)
+        .json({ error: "Username or email already exists." });
+    }
+    const hashedPassword = bcrypt.hashSync(password, SALT_LENGTH);
+    console.log("user not already created. creating user...");
+    const user = await User.create({
+      username,
+      email,
+      hashedPassword,
+      firstName,
+      lastName,
+      address,
+    });
+
+    console.log("user created. sending token...");
     const token = jwt.sign(
       { username: user.username, _id: user._id },
       process.env.JWT_SECRET
