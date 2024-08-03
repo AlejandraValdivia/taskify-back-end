@@ -5,6 +5,7 @@ const verifyToken = require("../middleware/verify-token");
 
 router.get("/", verifyToken, async (req, res) => {
   try {
+    console.log('---tasks req.body:', req.body)
     const tasks = await Task.find();
     console.log("--- tasks:", tasks);
     res.json(tasks);

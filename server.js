@@ -8,7 +8,6 @@ const router = express.Router();
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-// const authRoutes = require("./routes/authRoutes");
 const tasksRoutes = require("./routes/tasksRoutes");
 // const bookingRoutes = require('./routes/bookingRoutes');
 const logoutRoutes = require("./routes/logout");
@@ -18,16 +17,13 @@ const usersRouter = require("./controllers/users");
 const profilesRouter = require("./controllers/profiles");
 const jwt = require("jsonwebtoken");
 
-const testJWTRouter = require("./controllers/test-jwt");
 
-app.use("/test-jwt", testJWTRouter);
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 connectToDatabase();
 
-// app.use('/auth', authRoutes);
 app.use("/users", usersRouter);
 app.use("/profiles", profilesRouter);
 
