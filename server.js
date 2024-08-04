@@ -3,7 +3,6 @@ const port = process.env.PORT || 3000;
 const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
-const router = express.Router();
 
 const app = express();
 const cors = require("cors");
@@ -15,14 +14,15 @@ const methodOverride = require("method-override");
 const connectToDatabase = require("./connection");
 const usersRouter = require("./controllers/users");
 const profilesRouter = require("./controllers/profiles");
-const jwt = require("jsonwebtoken");
-
-
 
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 connectToDatabase();
+
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
 
 app.use("/users", usersRouter);
 app.use("/profiles", profilesRouter);
