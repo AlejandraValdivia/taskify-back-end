@@ -16,7 +16,7 @@ const usersRouter = require("./controllers/users");
 const profilesRouter = require("./controllers/profiles");
 
 app.use(cors({
-  origin: "https://taskify-front-end-hu20.onrender.com",
+  origin: "https://taskify-front-end-hu20.onrender.com" || "http://localhost:3000",
 }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
