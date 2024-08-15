@@ -15,9 +15,13 @@ const connectToDatabase = require("./connection");
 const usersRouter = require("./controllers/users");
 const profilesRouter = require("./controllers/profiles");
 
-app.use(cors({
-  origin: "https://taskify-frontend.onrender.com" || "http://localhost:3000",
-}));
+app.use(
+  cors({
+    origin: "https://taskify-frontend.onrender.com" || "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 connectToDatabase();
