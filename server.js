@@ -15,13 +15,28 @@ const connectToDatabase = require("./connection");
 const usersRouter = require("./controllers/users");
 const profilesRouter = require("./controllers/profiles");
 
-app.use(
-  cors({
-    origin: "https://taskify-frontend.onrender.com" || "http://localhost:3000",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  })
-);
+
+const allowedOrigins = [
+  "https://taskify-frontend.onrender.com/", 
+  // "http://localhost:5173", 
+  // "http://localhost:5174", 
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, 
+}));
+
+app.options('*', cors()); 
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 connectToDatabase();
@@ -33,7 +48,6 @@ app.get("/", (req, res) => {
 app.use("/users", usersRouter);
 app.use("/profiles", profilesRouter);
 
-// app.use('/booking', bookingRoutes);
 app.use("/tasks", tasksRoutes);
 app.use("/logout", logoutRoutes);
 app.use(methodOverride("_method"));

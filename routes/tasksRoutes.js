@@ -5,9 +5,16 @@ const verifyToken = require("../middleware/verify-token");
 
 router.get("/", verifyToken, async (req, res) => {
   try {
-    console.log('---tasks req.body:', req.body)
-    const tasks = await Task.find();
-    console.log("--- tasks:", tasks);
+    const name = req.query.name;
+    let tasks;
+    if (name) {
+      tasks = await Task.find({
+        name: { $regex: new RegExp(name, "i") },
+      });
+      res.json(tasks);
+    } else {
+      tasks = await Task.find();
+    }
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -15,7 +22,7 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 router.post("/", verifyToken, async (req, res) => {
-  const task = new task({
+  const task = new Task({
     name: req.body.name,
     description: req.body.description,
     booked: req.body.booked,
@@ -54,23 +61,6 @@ router.delete("/:id", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "task not found" });
     }
     res.json({ message: "Task deleted" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-router.get("/", verifyToken, async (req, res) => {
-  try {
-    const name = req.query.name;
-    if (name) {
-      const tasks = await Task.find({
-        name: { $regex: new RegExp(name, "i") },
-      });
-      res.json(tasks);
-    } else {
-      const tasks = await Task.find();
-      res.json(tasks);
-    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
