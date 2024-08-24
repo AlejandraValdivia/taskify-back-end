@@ -9,7 +9,7 @@ const SALT_LENGTH = 12;
 router.post("/signup", async (req, res) => {
   try {
     console.log("line 10 in signup post function");
-    const { username, email, password, firstName, lastName, address } =
+    const { username, email, password, firstName, lastName } =
       req.body;
     const userInDatabase = await User.findOne({
       $or: [{ username }, { email }],
@@ -27,7 +27,6 @@ router.post("/signup", async (req, res) => {
       hashedPassword,
       firstName,
       lastName,
-      address,
     });
 
     console.log("user created. sending token...");
